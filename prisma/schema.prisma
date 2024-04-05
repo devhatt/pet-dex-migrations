@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "maria:123@tcp(localhost:3306)/petdex?multiStatements=true"
+}
+
+enum AccountType {
+  user
+  legal_person
+}
+
+model User {
+  id           String      @id @default(uuid())
+  name         String?     @db.VarChar(128)
+  account_type AccountType // user | legal_person
+  birthdate    DateTime?
+  document_id  String      @db.VarChar(14) // CPF or CNPJ
+  avatar_url   String?     @db.VarChar(255)
+  email        String      @unique @db.VarChar(128)
+  password     String      @db.VarChar(100)
+  phone_number String?     @db.VarChar(12)
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  deleted_at   DateTime?
+
+  legal_person LegalPerson?
+  address      Address?
+  pets         Pet[]
+
+  @@map("users")
+}
+
+model LegalPerson {
+  id              String  @id @default(uuid())
+  user_id         String  @unique
+  social_links    String?
+  opening_hours   String  @db.Text // Formato de JSON  
+  adoption_policy String // P olitica de adoção ??????? pra que serve isso?
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("legal_persons")
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  user_id   String   @unique
+  address   String
+  city      String
+  state     String
+  latitude  Decimal?
+  longitude Decimal?
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("addresses")
+}
+
+model Breed {
+  id                 String  @id @default(uuid())
+  name               String // nome raça
+  type_of            String // tipo (cachorro, gato, etc)
+  size               String // tamanho
+  description        String? // descrição
+  height             String? // altura
+  weight             String? // peso
+  physical_char      String? //  
+  disposition        String? //disposição (alegre, calmo, etc)
+  ideal_for          String? // ideal para (idosos, crianças)
+  coat               String? //pelagem
+  img_url            String? // link imagem
+  housing_structures String? // clima adequado
+  dressage           String?
+  life_expectancy    String? // expectativa de vida
+
+  pets Pet[]
+
+  @@map("breeds")
+}
+
+model Pet {
+  id                    String   @id @default(uuid())
+  name                  String
+  breed_id              String
+  size                  String // tamanho
+  weight                Float // peso
+  adoption_date         DateTime
+  birthdate             DateTime
+  comorbidity           String?
+  tags                  String?
+  neutered              Boolean? //castrado
+  available_to_adoption Boolean  @default(true)
+  user_id               String
+
+  user     User       @relation(fields: [user_id], references: [id])
+  breed    Breed      @relation(fields: [breed_id], references: [id])
+  images   PetImage[]
+  vaccines Vaccine[]
+
+  @@map("pets")
+}
+
+model PetImage {
+  id     String @id @default(uuid())
+  url    String @db.VarChar(255)
+  pet_id String
+
+  pet Pet @relation(fields: [pet_id], references: [id])
+
+  @@map("pets_image")
+}
+
+model Vaccine {
+  id         String   @id @default(uuid())
+  pet_id     String
+  name       String   @db.VarChar(50)
+  date       DateTime
+  doctor_crm String   @db.VarChar(15)
+
+  pet Pet @relation(fields: [pet_id], references: [id])
+
+  @@map("vaccines")
+}
