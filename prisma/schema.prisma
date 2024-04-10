@@ -5,12 +5,13 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
   provider = "mysql"
-  url      = "maria:123@tcp(localhost:3306)/petdex?multiStatements=true"
+  url      = env("DATABASE_URL")
 }
 
 enum AccountType {
@@ -44,7 +45,7 @@ model LegalPerson {
   user_id         String  @unique
   social_links    String?
   opening_hours   String  @db.Text // Formato de JSON  
-  adoption_policy String // P olitica de adoção ??????? pra que serve isso?
+  adoption_policy String // Politica de adoção ??????? pra que serve isso?
 
   user User @relation(fields: [user_id], references: [id])
 
@@ -66,21 +67,22 @@ model Address {
 }
 
 model Breed {
-  id                 String  @id @default(uuid())
+  id                 Int     @id @default(autoincrement())
   name               String // nome raça
   type_of            String // tipo (cachorro, gato, etc)
   size               String // tamanho
-  description        String? // descrição
-  height             String? // altura
+  description        String? @db.Text // descrição
+  height             String? // altura 
   weight             String? // peso
-  physical_char      String? //  
-  disposition        String? //disposição (alegre, calmo, etc)
+  physical_char      String? // caracteristicas fisicas
+  disposition        String? // disposição (alegre, calmo, etc)
   ideal_for          String? // ideal para (idosos, crianças)
-  coat               String? //pelagem
+  coat               String? // pelagem
   img_url            String? // link imagem
   housing_structures String? // clima adequado
-  dressage           String?
+  training_level     String? //nivel de adestramento
   life_expectancy    String? // expectativa de vida
+  category           String?
 
   pets Pet[]
 
@@ -90,7 +92,7 @@ model Breed {
 model Pet {
   id                    String   @id @default(uuid())
   name                  String
-  breed_id              String
+  breed_id              Int
   size                  String // tamanho
   weight                Float // peso
   adoption_date         DateTime
@@ -120,11 +122,11 @@ model PetImage {
 }
 
 model Vaccine {
-  id         String   @id @default(uuid())
-  pet_id     String
-  name       String   @db.VarChar(50)
-  date       DateTime
-  doctor_crm String   @db.VarChar(15)
+  id        String   @id @default(uuid())
+  pet_id    String
+  name      String   @db.VarChar(50)
+  date      DateTime
+  doctor_id String?  @db.VarChar(15)
 
   pet Pet @relation(fields: [pet_id], references: [id])
 
