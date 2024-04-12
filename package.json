@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "seed:breeds": "ts-node prisma/breeds/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/node": "^20.12.7",
     "prisma": "^5.12.1",
     "ts-node": "^10.9.2"

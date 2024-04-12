@@ -24,7 +24,7 @@ model User {
   name         String?     @db.VarChar(128)
   account_type AccountType // user | legal_person
   birthdate    DateTime?
-  document_id  String      @db.VarChar(14) // CPF or CNPJ
+  document_id  String?     @db.VarChar(14) // CPF or CNPJ
   avatar_url   String?     @db.VarChar(255)
   email        String      @unique @db.VarChar(128)
   password     String      @db.VarChar(100)
@@ -43,9 +43,12 @@ model User {
 model LegalPerson {
   id              String  @id @default(uuid())
   user_id         String  @unique
-  social_links    String?
+  twitter         String?
+  facebook        String?
+  instagram       String?
+  website         String?
   opening_hours   String  @db.Text // Formato de JSON  
-  adoption_policy String // Politica de adoção ??????? pra que serve isso?
+  adoption_policy String // Politica de adoção
 
   user User @relation(fields: [user_id], references: [id])
 
@@ -68,21 +71,21 @@ model Address {
 
 model Breed {
   id                 Int     @id @default(autoincrement())
-  name               String // nome raça
-  type_of            String // tipo (cachorro, gato, etc)
-  size               String // tamanho
-  description        String? @db.Text // descrição
-  height             String? // altura 
-  weight             String? // peso
-  physical_char      String? // caracteristicas fisicas
-  disposition        String? // disposição (alegre, calmo, etc)
-  ideal_for          String? // ideal para (idosos, crianças)
-  coat               String? // pelagem
-  img_url            String? // link imagem
-  housing_structures String? // clima adequado
-  training_level     String? //nivel de adestramento
-  life_expectancy    String? // expectativa de vida
-  category           String?
+  name               String // Nome Raça
+  type_of            String // Tipo (cachorro, gato, etc)
+  size               String // Tamanho
+  description        String? @db.Text // Descrição
+  height             String? // Altura 
+  weight             String? // Peso
+  physical_char      String? // Caracteristicas Fisicas
+  disposition        String? // Disposição (alegre, calmo, etc)
+  ideal_for          String? // Ideal para (idosos, crianças)
+  coat               String? // Pelagem
+  img_url            String? // Link imagem
+  housing_structures String? // Clima adequado
+  training_level     String? // Nivel de adestramento
+  life_expectancy    String? // Expectativa de vida
+  category           String? // Categoria
 
   pets Pet[]
 
@@ -93,13 +96,13 @@ model Pet {
   id                    String   @id @default(uuid())
   name                  String
   breed_id              Int
-  size                  String // tamanho
-  weight                Float // peso
-  adoption_date         DateTime
-  birthdate             DateTime
-  comorbidity           String?
+  size                  String // Tamanho
+  weight                Float // Peso
+  adoption_date         DateTime // Data de adoção
+  birthdate             DateTime // Data de nascimento
+  comorbidity           String? // Comorbidade
   tags                  String?
-  neutered              Boolean? //castrado
+  neutered              Boolean? // Castrado
   available_to_adoption Boolean  @default(true)
   user_id               String
 
