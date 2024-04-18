@@ -4,7 +4,7 @@ CREATE TABLE `users` (
     `name` VARCHAR(128) NULL,
     `account_type` ENUM('user', 'legal_person') NOT NULL,
     `birthdate` DATETIME(3) NULL,
-    `document_id` VARCHAR(14) NOT NULL,
+    `document_id` VARCHAR(14) NULL,
     `avatar_url` VARCHAR(255) NULL,
     `email` VARCHAR(128) NOT NULL,
     `password` VARCHAR(100) NOT NULL,
@@ -21,9 +21,12 @@ CREATE TABLE `users` (
 CREATE TABLE `legal_persons` (
     `id` VARCHAR(191) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
-    `social_links` VARCHAR(191) NULL,
-    `opening_hours` TEXT NOT NULL,
-    `adoption_policy` VARCHAR(191) NOT NULL,
+    `twitter` VARCHAR(191) NULL,
+    `facebook` VARCHAR(191) NULL,
+    `instagram` VARCHAR(191) NULL,
+    `website` VARCHAR(191) NULL,
+    `opening_hours` LONGTEXT NOT NULL,
+    `adoption_policy` LONGTEXT NOT NULL,
 
     UNIQUE INDEX `legal_persons_user_id_key`(`user_id`),
     PRIMARY KEY (`id`)
@@ -70,14 +73,16 @@ CREATE TABLE `pets` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `breed_id` INTEGER NOT NULL,
-    `size` VARCHAR(191) NOT NULL,
-    `weight` DOUBLE NOT NULL,
+    `gender` VARCHAR(191) NOT NULL,
+    `size` VARCHAR(191) NULL,
+    `weight` DOUBLE NULL,
+    `height` DOUBLE NULL,
     `adoption_date` DATETIME(3) NOT NULL,
     `birthdate` DATETIME(3) NOT NULL,
-    `comorbidity` VARCHAR(191) NULL,
-    `tags` VARCHAR(191) NULL,
+    `special_care` BOOLEAN NOT NULL DEFAULT false,
+    `special_care_description` LONGTEXT NULL,
     `neutered` BOOLEAN NULL,
-    `available_to_adoption` BOOLEAN NOT NULL DEFAULT true,
+    `available_to_adoption` BOOLEAN NOT NULL DEFAULT false,
     `user_id` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -98,7 +103,7 @@ CREATE TABLE `vaccines` (
     `pet_id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(50) NOT NULL,
     `date` DATETIME(3) NOT NULL,
-    `doctor_id` VARCHAR(15) NULL,
+    `doctor_name` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

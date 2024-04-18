@@ -47,8 +47,8 @@ model LegalPerson {
   facebook        String?
   instagram       String?
   website         String?
-  opening_hours   String  @db.Text // Formato de JSON  
-  adoption_policy String // Politica de adoção
+  opening_hours   String  @db.LongText // Formato de JSON  
+  adoption_policy String  @db.LongText // Politica de adoção
 
   user User @relation(fields: [user_id], references: [id])
 
@@ -75,8 +75,8 @@ model Breed {
   type_of            String // Tipo (cachorro, gato, etc)
   size               String // Tamanho
   description        String? @db.Text // Descrição
-  height             String? // Altura 
-  weight             String? // Peso
+  height             String? // peso 
+  weight             String? // altura
   physical_char      String? // Caracteristicas Fisicas
   disposition        String? // Disposição (alegre, calmo, etc)
   ideal_for          String? // Ideal para (idosos, crianças)
@@ -93,18 +93,20 @@ model Breed {
 }
 
 model Pet {
-  id                    String   @id @default(uuid())
-  name                  String
-  breed_id              Int
-  size                  String // Tamanho
-  weight                Float // Peso
-  adoption_date         DateTime // Data de adoção
-  birthdate             DateTime // Data de nascimento
-  comorbidity           String? // Comorbidade
-  tags                  String?
-  neutered              Boolean? // Castrado
-  available_to_adoption Boolean  @default(true)
-  user_id               String
+  id                       String   @id @default(uuid())
+  name                     String
+  breed_id                 Int
+  gender                   String // Sexo
+  size                     String? // Tamanho
+  weight                   Float? // Altura
+  height                   Float? // Peso
+  adoption_date            DateTime // Data de adoção
+  birthdate                DateTime // Data de nascimento
+  special_care             Boolean  @default(false) // Comorbidade
+  special_care_description String?  @db.LongText // Descrição comorbidade
+  neutered                 Boolean? // Castrado
+  available_to_adoption    Boolean  @default(false)
+  user_id                  String
 
   user     User       @relation(fields: [user_id], references: [id])
   breed    Breed      @relation(fields: [breed_id], references: [id])
@@ -125,11 +127,11 @@ model PetImage {
 }
 
 model Vaccine {
-  id        String   @id @default(uuid())
-  pet_id    String
-  name      String   @db.VarChar(50)
-  date      DateTime
-  doctor_id String?  @db.VarChar(15)
+  id          String   @id @default(uuid())
+  pet_id      String
+  name        String   @db.VarChar(50)
+  date        DateTime
+  doctor_name String?
 
   pet Pet @relation(fields: [pet_id], references: [id])
 

@@ -25,6 +25,7 @@ async function seed() {
       phone_number: "1234567890",
       pets: {
         create: {
+          gender: 'femea',
           adoption_date: faker.date.past(),
           birthdate: faker.date.past(),
           name: faker.animal.dog(),
@@ -37,7 +38,7 @@ async function seed() {
             create: {
               date: faker.date.past(),
               name: "V8",
-              doctor_id: "1",
+              doctor_name: "Dra Felipa",
             },
           },
         },
